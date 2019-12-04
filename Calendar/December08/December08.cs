@@ -1,5 +1,5 @@
 ﻿using System;
-public class December22Puzzle : Calendar.PuzzleClass
+public class December08Puzzle : Calendar.PuzzleClass
 {
 
     public override string Run()
@@ -8,6 +8,7 @@ public class December22Puzzle : Calendar.PuzzleClass
     }
 }
 
-namespace December22
+namespace December08
+
 {
 }

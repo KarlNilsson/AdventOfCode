@@ -1,9 +1,10 @@
 ﻿using System;
-public class December14Puzzle : Calendar.Puzzle
+public class December14Puzzle : Calendar.PuzzleClass
 {
-    public string Run()
+
+    public override string Run()
     {
-        throw new NotImplementedException();
+        return Title;
     }
 }
 

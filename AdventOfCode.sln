@@ -6,13 +6,19 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{4343EC35-FC2C-40F6-9A87-8ACF783EC881}"
 	ProjectSection(SolutionItems) = preProject
 		resources\dec1\dec1.txt = resources\dec1\dec1.txt
+		resources\dec2\dec2.txt = resources\dec2\dec2.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{A1E8F5E2-CA28-4F1F-B9DE-CB19790201C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{A1E8F5E2-CA28-4F1F-B9DE-CB19790201C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode", "AdventOfCode\AdventOfCode.csproj", "{216F82C4-32E4-474C-9E81-F31F8078BB4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode", "AdventOfCode\AdventOfCode.csproj", "{216F82C4-32E4-474C-9E81-F31F8078BB4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calendar", "Calendar\Calendar.csproj", "{A0E2E992-3779-4C2C-82FC-44949A2CEE0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calendar", "Calendar\Calendar.csproj", "{A0E2E992-3779-4C2C-82FC-44949A2CEE0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{9F08BDBF-73D2-4D7B-84E4-74D97F380094}"
+	ProjectSection(SolutionItems) = preProject
+		resources\Misc\Logo.txt = resources\Misc\Logo.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +41,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9F08BDBF-73D2-4D7B-84E4-74D97F380094} = {4343EC35-FC2C-40F6-9A87-8ACF783EC881}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5CD06C2-854A-47D4-98CE-6920EF1245FC}

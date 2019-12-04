@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using December02;
 using System.Text;
 
-public class December2Puzzle : Calendar.Puzzle
+public class December02Puzzle : Calendar.PuzzleClass
 {
-    public string Run()
+    public December02Puzzle()
+    {
+        Title = "1202 Program Alarm";
+    }
+    
+    public override string Run()
     {
         var input = Shifter.GetInputArray($"{Tools.RootPath}/resources/dec2/dec2.txt");
         var replacements = new Dictionary<int, int> { { 1, 12 }, { 2, 2 } };
@@ -24,6 +29,7 @@ public class December2Puzzle : Calendar.Puzzle
     }
 }
 
-namespace December2
+namespace December02
+
 {
 }

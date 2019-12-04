@@ -1,13 +1,13 @@
 ﻿using System;
-public class December22Puzzle : Calendar.PuzzleClass
+public class December03Puzzle : Calendar.PuzzleClass
 {
-
     public override string Run()
     {
         return Title;
     }
 }
 
-namespace December22
+namespace December03
+
 {
 }
