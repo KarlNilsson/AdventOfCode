@@ -2,8 +2,8 @@
 {
     public string Run()
     {
-        var input = December1.RocketEquation.LoadInput($"{Tools.RootPath}/resources/dec1/dec1.txt");
-        var reqs = December1.RocketEquation.CalculateFuelRequirements(input);
+        var input = December01.RocketEquation.LoadInput($"{Tools.RootPath}/resources/dec1/dec1.txt");
+        var reqs = December01.RocketEquation.CalculateFuelRequirements(input);
         return reqs.ToString();
     }
 }

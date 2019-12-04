@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace December1
+namespace December01
 {
     public class RocketEquation
     {
