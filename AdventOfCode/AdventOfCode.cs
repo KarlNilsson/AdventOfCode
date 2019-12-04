@@ -43,8 +43,14 @@ namespace AdventOfCode
             });
             var calendarFactory = new CalendarFactory(day);
             var todaysPuzzle = calendarFactory.GetPuzzle();
-            var output = todaysPuzzle.Run();
-            Console.WriteLine($"Output for day {day}: {output}");
+            try
+            {
+                var output = todaysPuzzle.Run();
+                Console.WriteLine($"Output for day {day}: {output}");
+            } catch (NotImplementedException)
+            {
+                Console.Error.WriteLine("Puzzle not yet implemented");
+            }
             Console.ReadLine();
         }
     }
