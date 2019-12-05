@@ -12,7 +12,7 @@ public class December04Puzzle : Calendar.PuzzleClass
     {
         var sb = new StringBuilder();
         var input = Tools.GetFileContents("dec4");
-        var pwGen = new PasswordGenerator(input)
+        var pwGen = new PasswordGenerator(input);
         var pwList = pwGen.GeneratePasswordList();
         var result = pwList.Count;
         sb.AppendLine($"\n\tPart 1: {result.ToString()}");
