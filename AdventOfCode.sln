@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{
 	ProjectSection(SolutionItems) = preProject
 		resources\dec1\dec1.txt = resources\dec1\dec1.txt
 		resources\dec2\dec2.txt = resources\dec2\dec2.txt
+		resources\dec3\dec3.txt = resources\dec3\dec3.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{A1E8F5E2-CA28-4F1F-B9DE-CB19790201C2}"
