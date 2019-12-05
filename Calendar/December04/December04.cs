@@ -16,6 +16,10 @@ public class December04Puzzle : Calendar.PuzzleClass
         var pwList = pwGen.GeneratePasswordList();
         var result = pwList.Count;
         sb.AppendLine($"\n\tPart 1: {result.ToString()}");
+
+        pwList = pwGen.GeneratePasswordList(false);
+        result = pwList.Count;
+        sb.AppendLine($"\n\tPart 2: {result.ToString()}");
         
         return sb.ToString();
     }

@@ -29,9 +29,13 @@ namespace AdventOfCode
 
         private void RunPuzzle(IPuzzle puzzle)
         {
+            var timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
             var result = puzzle.Run();
+            timer.Stop();
             Console.WriteLine("Puzzle result:");
             Console.WriteLine(result);
+            Console.WriteLine($"Time elapsed: {timer.ElapsedMilliseconds}ms");
         }
 
         private int GetUserInput()

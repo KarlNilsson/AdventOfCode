@@ -19,12 +19,10 @@ namespace Extensions
             {
                 var a = str[i];
                 var b = newPassword[i - 1];
-                if (Char.GetNumericValue(str[i]) < Char.GetNumericValue(newPassword[i-1]))
+                if (char.GetNumericValue(str[i]) < char.GetNumericValue(newPassword[i-1]))
                 {
                     newPassword = ReplaceRemaining(i, newPassword[i - 1], newPassword);
-                    //newPassword.InsertRange(i, Enumerable.Repeat(newPassword[i - 1], str.Length - i));
                     break;
-                    //newPassword[i] = newPassword[i - 1];
                 }
             }
             return new string(newPassword.ToArray());
