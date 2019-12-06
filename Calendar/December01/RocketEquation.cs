@@ -34,10 +34,6 @@ namespace December01
             });
             return fuelRequirements.Sum();
         }
-
-        public static void Main()
-        {
-        }
     }
 
 }
