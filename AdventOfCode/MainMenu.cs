@@ -21,6 +21,7 @@ namespace AdventOfCode
                 {
                     return;
                 }
+                Console.WriteLine(new string('-', 50));
                 calendarFactory.Day = (PuzzleEnum)option;
                 var todaysPuzzle = calendarFactory.GetPuzzle();
                 RunPuzzle(todaysPuzzle);

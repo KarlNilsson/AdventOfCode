@@ -12,16 +12,18 @@ public class December02Puzzle : Calendar.PuzzleClass
     
     public override string Run()
     {
-        var input = Shifter.GetInputArray($"{Tools.RootPath}/resources/dec2/dec2.txt");
+        var input = Tools.GetFileContents("dec2");
+        var inputArray = Shifter.GetInputArray(input);
         var replacements = new Dictionary<int, int> { { 1, 12 }, { 2, 2 } };
-        input = Shifter.ReplaceValues(input, replacements);
+        inputArray = Shifter.ReplaceValues(inputArray, replacements);
         var sb = new StringBuilder();
-        var output = Shifter.Shift(input);
+        var shifter = new Shifter(inputArray);
+        var output = shifter.Alarm();
         sb.AppendLine($"\n\tPart 1: {output.ToString()}");
 
-        input = Shifter.GetInputArray($"{Tools.RootPath}/resources/dec2/dec2.txt");
+        inputArray = Shifter.GetInputArray(input);
 
-        var output2 = Shifter.FindVerbNouns(19690720, input);
+        var output2 = shifter.FindVerbNouns(19690720, inputArray);
         var answer2 = output2.Key * 100 + output2.Value;
         sb.AppendLine($"\tPart 2: {answer2.ToString()}");
 
