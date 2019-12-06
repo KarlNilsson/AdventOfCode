@@ -8,4 +8,8 @@
     <ProjectReference Include="..\Tools\Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Intcode\Tests\" />
+  </ItemGroup>
+
 </Project>

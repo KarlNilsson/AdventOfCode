@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace December02
+namespace Intcode
 {
-    public class Shifter
+    public class IntcodeMachine
     {
         private enum OPCodeEnum
         {
@@ -13,6 +13,10 @@ namespace December02
             MULT = 2,
             IN = 3,
             OUT = 4,
+            JNZ = 5,
+            JZ = 6,
+            LT = 7,
+            EQ = 8,
             STOP = 99
         }
 
@@ -41,7 +45,7 @@ namespace December02
         private Instruction _instruction;
         int _inputReg;
         int _outputReg;
-        public Shifter(int[] Program = null)
+        public IntcodeMachine(int[] Program = null)
         {
             _program = Program;
             _pc = 0;
@@ -60,6 +64,8 @@ namespace December02
         {
             _program = Program;
             _pc = 0;
+            _inputReg = 0;
+            _outputReg = 0;
         }
 
         public int ExecuteProgram()
@@ -118,53 +124,48 @@ namespace December02
             _instruction.Param3 = (OPModeEnum)(_program[_pc] / 10000 % 10);
 
 
-            var returnCode = OPReturnCodeEnum.STOP;
-            var pcIncrease = -1;
+            OPReturnCodeEnum returnCode;
 
-            var reg1 = _program[_pc + 1];
-            var reg2 = _program[_pc + 2];
-            var reg3 = _program[_pc + 3];
-            int value1, value2;
             switch (_instruction.OPCode)
             {
                 case OPCodeEnum.STOP:
-                    returnCode = OPReturnCodeEnum.STOP;
-                    pcIncrease = -1;
+                    returnCode = Stop();
                     break;
-
                 case OPCodeEnum.ADD:
-                    value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
-                    value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
-                    _program[reg3] = value1 + value2;
-                    _pc += 4;
-                    returnCode = OPReturnCodeEnum.OK;
+                    returnCode = Add();
                     break;
 
                 case OPCodeEnum.MULT:
-                    value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
-                    value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
-                    _program[reg3] = value1 * value2;
-                    _pc += 4;
-                    returnCode = OPReturnCodeEnum.OK;
+                    returnCode = Mult();
                     break;
 
                 case OPCodeEnum.IN:
-                    _program[reg1] = _inputReg;
-                    _pc += 2;
-                    returnCode = OPReturnCodeEnum.OK;
+                    returnCode = In();
                     break;
 
                 case OPCodeEnum.OUT:
-                    value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
-                    _outputReg = value1;
-                    Console.WriteLine(_outputReg);
-                    _pc += 2;
-                    returnCode = OPReturnCodeEnum.OK;
+                    returnCode = Out();
+                    break;
+
+                case OPCodeEnum.JNZ:
+                    returnCode = Jnz();
+                    break;
+
+                case OPCodeEnum.JZ:
+                    returnCode = Jz();
+                    break;
+
+                case OPCodeEnum.LT:
+                    returnCode = Lt();
+                    break;
+
+                case OPCodeEnum.EQ:
+                    returnCode = Eq();
                     break;
 
                 default:
+                    Console.Error.WriteLine("Uncaught OP Code!");
                     returnCode = OPReturnCodeEnum.STOP;
-                    pcIncrease = -1;
                     break;
 
             }
@@ -197,6 +198,96 @@ namespace December02
                 }
             }
             return _outputReg;
+        }
+
+        private OPReturnCodeEnum Add()
+        {
+            var reg1 = _program[_pc + 1];
+            var reg2 = _program[_pc + 2];
+            var reg3 = _program[_pc + 3];
+            var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
+            var value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
+            _program[reg3] = value1 + value2;
+            _pc += 4;
+            return OPReturnCodeEnum.OK;
+        }
+
+        private OPReturnCodeEnum Mult()
+        {
+            var reg1 = _program[_pc + 1];
+            var reg2 = _program[_pc + 2];
+            var reg3 = _program[_pc + 3];
+            var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
+            var value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
+            _program[reg3] = value1 * value2;
+            _pc += 4;
+            return OPReturnCodeEnum.OK;
+        }
+
+        private OPReturnCodeEnum In()
+        {
+            var reg1 = _program[_pc + 1];
+            _program[reg1] = _inputReg;
+            _pc += 2;
+            return OPReturnCodeEnum.OK;
+        }
+
+        private OPReturnCodeEnum Out()
+        {
+            var reg1 = _program[_pc + 1];
+            var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
+            _outputReg = value1;
+            Console.WriteLine(_outputReg);
+            _pc += 2;
+            return OPReturnCodeEnum.OK;
+        }
+
+        private OPReturnCodeEnum Jnz()
+        {
+            var reg1 = _program[_pc + 1];
+            var reg2 = _program[_pc + 2];
+            var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
+            var value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
+            _pc = value1 != 0 ? value2 : _pc + 3;
+            return OPReturnCodeEnum.OK;
+        }
+
+        private OPReturnCodeEnum Jz()
+        {
+            var reg1 = _program[_pc + 1];
+            var reg2 = _program[_pc + 2];
+            var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
+            var value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
+            _pc = value1 == 0 ? value2 : _pc + 3;
+            return OPReturnCodeEnum.OK;
+        }
+
+        private OPReturnCodeEnum Lt()
+        {
+            var reg1 = _program[_pc + 1];
+            var reg2 = _program[_pc + 2];
+            var reg3 = _program[_pc + 3];
+            var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
+            var value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
+            _program[reg3] = value1 < value2 ? 1 : 0;
+            _pc += 4;
+            return OPReturnCodeEnum.OK;
+        }
+        private OPReturnCodeEnum Eq()
+        {
+            var reg1 = _program[_pc + 1];
+            var reg2 = _program[_pc + 2];
+            var reg3 = _program[_pc + 3];
+            var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
+            var value2 = _instruction.Param2 == OPModeEnum.IMM ? reg2 : _program[reg2];
+            _program[reg3] = value1 == value2 ? 1 : 0;
+            _pc += 4;
+            return OPReturnCodeEnum.OK;
+        }
+
+        private OPReturnCodeEnum Stop()
+        {
+            return OPReturnCodeEnum.STOP;
         }
 
     }
