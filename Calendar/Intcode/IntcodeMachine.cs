@@ -13,8 +13,8 @@ namespace Intcode
             MULT = 2,
             IN = 3,
             OUT = 4,
-            JNZ = 5,
-            JZ = 6,
+            JMP_T = 5,
+            JMP_F = 6,
             LT = 7,
             EQ = 8,
             STOP = 99
@@ -30,7 +30,16 @@ namespace Intcode
         {
             ERR = -1,
             OK = 0,
-            STOP = 1
+            STOP = 1,
+            WAIT = 2
+        }
+
+        public enum MachineState
+        {
+            IDLE = 0,
+            RUN = 1,
+            WAIT = 2,
+            STOP = 3
         }
 
         private struct Instruction
@@ -44,10 +53,11 @@ namespace Intcode
         private int[] _program;
         private int _pc;
         private Instruction _instruction;
-        private Stack<int> _inputStack;
-        private Stack<int> _outputStack;
+        private Queue<int> _inputStack;
+        private Queue<int> _outputStack;
         int _inputReg;
         int _outputReg;
+        public MachineState State { get; private set; }
         public IntcodeMachine(int[] Program = null)
         {
             _program = Program;
@@ -55,8 +65,9 @@ namespace Intcode
             _instruction = new Instruction();
             _inputReg = 0;
             _outputReg = 0;
-            _inputStack = new Stack<int>();
-            _outputStack = new Stack<int>();
+            _inputStack = new Queue<int>();
+            _outputStack = new Queue<int>();
+            State = MachineState.IDLE;
         }
 
         public static int[] GetInputArray(string Input)
@@ -71,6 +82,7 @@ namespace Intcode
             _pc = 0;
             _inputReg = 0;
             _outputReg = 0;
+            State = MachineState.IDLE;
         }
 
         private void Output(int OutputCode)
@@ -147,12 +159,12 @@ namespace Intcode
                     returnCode = Out();
                     break;
 
-                case OPCodeEnum.JNZ:
-                    returnCode = Jnz();
+                case OPCodeEnum.JMP_T:
+                    returnCode = Jmp_T();
                     break;
 
-                case OPCodeEnum.JZ:
-                    returnCode = Jz();
+                case OPCodeEnum.JMP_F:
+                    returnCode = Jmp_F();
                     break;
 
                 case OPCodeEnum.LT:
@@ -180,9 +192,9 @@ namespace Intcode
             return returnCode;
         }
 
-        public void PushInput(int input)
+        public void QueueInput(int input)
         {
-            _inputStack.Push(input);
+            _inputStack.Enqueue(input);
         }
 
         public int PeekInput(int input)
@@ -190,24 +202,24 @@ namespace Intcode
             return _inputStack.Peek();
         }
 
-        public int PopInput()
+        public int DequeueInput()
         {
-            return _inputStack.Pop();
-        }
-        
-        public void PushOutput(int output)
-        {
-            _outputStack.Push(output);
-        }
-        public int PopOutput()
-        {
-            return _outputStack.Pop();
+            return _inputStack.Dequeue();
         }
 
+        public void QueueOutput(int output)
+        {
+            _outputStack.Enqueue(output);
+        }
         public int PeekOutput()
         {
             return _outputStack.Peek();
         }
+        public int DequeueOutput()
+        {
+            return _outputStack.Dequeue();
+        }
+
 
         public int Alarm()
         {
@@ -226,11 +238,12 @@ namespace Intcode
         {
             while (true)
             {
+                State = MachineState.RUN;
                 var returnValue = ExecuteNextInstruction();
-                if (returnValue == OPReturnCodeEnum.STOP)
-                {
-                    break;
-                }
+
+                if (returnValue == OPReturnCodeEnum.STOP) { State = MachineState.STOP; break; }
+                else if (returnValue == OPReturnCodeEnum.WAIT) { State = MachineState.WAIT; break; }
+
             }
             return _outputReg;
         }
@@ -264,9 +277,9 @@ namespace Intcode
             var reg1 = _program[_pc + 1];
             if (_inputStack.Count < 1)
             {
-                return OPReturnCodeEnum.ERR;
+                return OPReturnCodeEnum.WAIT;
             }
-            _inputReg = _inputStack.Pop();
+            _inputReg = _inputStack.Dequeue();
             _program[reg1] = _inputReg;
             _pc += 2;
             return OPReturnCodeEnum.OK;
@@ -277,12 +290,12 @@ namespace Intcode
             var reg1 = _program[_pc + 1];
             var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
             _outputReg = value1;
-            _outputStack.Push(_outputReg);
+            _outputStack.Enqueue(_outputReg);
             _pc += 2;
             return OPReturnCodeEnum.OK;
         }
 
-        private OPReturnCodeEnum Jnz()
+        private OPReturnCodeEnum Jmp_T()
         {
             var reg1 = _program[_pc + 1];
             var reg2 = _program[_pc + 2];
@@ -292,7 +305,7 @@ namespace Intcode
             return OPReturnCodeEnum.OK;
         }
 
-        private OPReturnCodeEnum Jz()
+        private OPReturnCodeEnum Jmp_F()
         {
             var reg1 = _program[_pc + 1];
             var reg2 = _program[_pc + 2];

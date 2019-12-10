@@ -47,21 +47,21 @@ namespace Intcode
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 8;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting EQ_POS: \tInput: {input}\tResult: {result}\tExpected: 1");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 9;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting EQ_POS: \tInput: {input}\tResult: {result}\tExpected: 0");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 7;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting EQ_POS: \tInput: {input}\tResult: {result}\tExpected: 0");
 
@@ -82,14 +82,14 @@ namespace Intcode
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 7;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting LT_POS: \tInput: {input}\tResult: {result}\tExpected: 1");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 8;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting LT_POS: \tInput: {input}\tResult: {result}\tExpected: 0");
 			return sb.ToString();
@@ -106,21 +106,21 @@ namespace Intcode
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 8;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting EQ_IMM: \tInput: {input}\tResult: {result}\tExpected: 1");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 9;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting EQ_IMM: \tInput: {input}\tResult: {result}\tExpected: 0");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 7;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting EQ_IMM: \tInput: {input}\tResult: {result}\tExpected: 0");
             return sb.ToString();
@@ -138,14 +138,14 @@ namespace Intcode
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 7;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting LT_POS: \tInput: {input}\tResult: {result}\tExpected: 1");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 8;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting LT_POS: \tInput: {input}\tResult: {result}\tExpected: 0");
 			return sb.ToString();
@@ -163,7 +163,7 @@ namespace Intcode
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 0;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting JMP_POS:\tInput: {input}\tResult: {result}\tExpected: 0");
 
@@ -171,7 +171,7 @@ namespace Intcode
             intcode.LoadProgram(inputArray);
 
             input = 1;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting JMP_POS:\tInput: {input}\tResult: {result}\tExpected: 1");
 			return sb.ToString();
@@ -189,14 +189,14 @@ namespace Intcode
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 0;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting JMP_IMM:\tInput: {input}\tResult: {result}\tExpected: 0");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 1;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting JMP_IMM:\tInput: {input}\tResult: {result}\tExpected: 1");
 			return sb.ToString();
@@ -215,21 +215,21 @@ namespace Intcode
             intcode.LoadProgram(inputArray);
 
             input = -100;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting DAY5_PT2:\tInput: {input}\tResult: {result}\tExpected: 999");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 8;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting DAY5_PT2:\tInput: {input}\tResult: {result}\tExpected: 1000");
 
             Array.Copy(inputArraySource, 0, inputArray, 0, inputArraySource.Length);
             intcode.LoadProgram(inputArray);
             input = 100;
-            intcode.PushInput(input);
+            intcode.QueueInput(input);
             result = intcode.ExecuteProgram();
             sb.AppendLine($"\tTesting DAY5_PT2:\tInput: {input}\tResult: {result}\tExpected: 1001");
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Intcode;
 
@@ -12,37 +13,66 @@ public class December07Puzzle : Calendar.PuzzleClass
 
     public override string Run()
     {
-        var thrusterSeqs = generateAllPermutations(new List<int> { 0, 1, 2, 3, 4 });
-        var maxOutput = int.MinValue;
         var input = Tools.GetFileContents("dec7");
         var defaultProgram = IntcodeMachine.GetInputArray(input);
-        var intcode = new IntcodeMachine();
-        var programCopy = new int[defaultProgram.Length];
-        Array.Copy(defaultProgram, 0, programCopy, 0, defaultProgram.Length);
-        intcode.LoadProgram(programCopy);
 
+        var thrusterSeqsP1 = generateAllPermutations(new List<int> { 0, 1, 2, 3, 4 });
+        var thrusterSeqsP2 = generateAllPermutations(new List<int> { 5, 6, 7, 8, 9 });
 
+        var outputP1 = RunAmplifiers(thrusterSeqsP1, (int[])defaultProgram.Clone());
+        var outputP2 = RunAmplifiers(thrusterSeqsP2, (int[])defaultProgram.Clone());
 
-        foreach (var thrusterSeq in thrusterSeqs)
+        sb.AppendLine($"\n\tPart 1: {outputP1.ToString()}");
+        sb.AppendLine($"\n\tPart 2: {outputP2.ToString()}");
+        return sb.ToString();
+    }
+
+    private int RunAmplifiers(List<List<int>> permutations, int[] program)
+    {
+        var numAmplifiers = 5;
+        var amplifiers = new List<IntcodeMachine>(numAmplifiers);
+        for (int i = 0; i < numAmplifiers; i++)
         {
-            intcode.PushOutput(0);
-            foreach(var phaseSetting in thrusterSeq)
-            {
-                intcode.PushInput(intcode.PopOutput());
-                intcode.PushInput(phaseSetting);
-                Array.Copy(defaultProgram, 0, programCopy, 0, defaultProgram.Length);
-                intcode.LoadProgram(programCopy);
-                intcode.ExecuteProgram();
-            }
-            var currentOutput = intcode.PopOutput();
-            maxOutput = currentOutput > maxOutput ? currentOutput : maxOutput;
-
+            amplifiers.Add(new IntcodeMachine());
         }
 
-        sb.AppendLine($"\n\tPart 1: {maxOutput.ToString()}");
+        var thrusterSeqs = permutations;
 
-        sb.AppendLine($"\n\tPart 2: {maxOutput.ToString()}");
-        return sb.ToString();
+        var maxOutput = int.MinValue;
+        foreach (var thrusterSeq in thrusterSeqs)
+        {
+            var machineStates = new IntcodeMachine.MachineState[numAmplifiers];
+            Debug.Assert(thrusterSeq.Count == numAmplifiers);
+            Debug.Assert(machineStates.Length == numAmplifiers);
+
+            // Reload the base program for each thruster permutation
+            for (int i = 0; i < numAmplifiers; i++)
+            {
+                var programClone = (int[])program.Clone();
+                amplifiers[i].LoadProgram(programClone);
+                machineStates[i] = amplifiers[i].State;
+                amplifiers[i].QueueInput(thrusterSeq[i]);
+
+            }
+
+            // Default output is 0;
+            var currentOutput = 0;
+            while (machineStates.All(x => x != IntcodeMachine.MachineState.STOP))
+            {
+
+                for (int i = 0; i < amplifiers.Count; i++)
+                {
+                    var currentMachine = amplifiers[i];
+                    var phaseSetting = thrusterSeq[i];
+                    currentMachine.QueueInput(currentOutput);
+                    currentMachine.ExecuteProgram();
+                    currentOutput = currentMachine.DequeueOutput();
+                    machineStates[i] = currentMachine.State;
+                }
+                maxOutput = currentOutput > maxOutput ? currentOutput : maxOutput;
+            }
+        }
+        return maxOutput;
     }
 
     private List<List<int>> generateAllPermutations(List<int> items)
@@ -50,11 +80,11 @@ public class December07Puzzle : Calendar.PuzzleClass
         var allPerms = new List<List<int>>();
         int[] currentPerm = new int[items.Count];
         bool[] inSelection = new bool[items.Count];
-        generatePermutation(items, inSelection, currentPerm, allPerms, 0);
+        GeneratePermutation(items, inSelection, currentPerm, allPerms, 0);
         return allPerms;
     }
 
-    private void generatePermutation(List<int> items, bool[] inSelection, int[] currentPerm, List<List<int>> allPerms, int nextPos)
+    private void GeneratePermutation(List<int> items, bool[] inSelection, int[] currentPerm, List<List<int>> allPerms, int nextPos)
     {
         if (nextPos == items.Count)
         {
@@ -68,14 +98,13 @@ public class December07Puzzle : Calendar.PuzzleClass
                 {
                     inSelection[i] = true;
                     currentPerm[nextPos] = items[i];
-                    generatePermutation(items, inSelection, currentPerm, allPerms, nextPos + 1);
+                    GeneratePermutation(items, inSelection, currentPerm, allPerms, nextPos + 1);
                     inSelection[i] = false;
                 }
             }
         }
 
     }
-
 }
 
 namespace December07

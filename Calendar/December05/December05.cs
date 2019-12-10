@@ -13,13 +13,13 @@ public class December05Puzzle : Calendar.PuzzleClass
         var input = Tools.GetFileContents("dec5");
         var inputArray = IntcodeMachine.GetInputArray(input);
         var shifter = new IntcodeMachine(inputArray);
-        shifter.PushInput(1);
+        shifter.QueueInput(1);
         var result = shifter.ExecuteProgram();
         sb.AppendLine($"\n\tPart 1: {result.ToString()}");
 
         inputArray = IntcodeMachine.GetInputArray(input);
         shifter.LoadProgram(inputArray);
-        shifter.PushInput(5);
+        shifter.QueueInput(5);
         result = shifter.ExecuteProgram();
         sb.AppendLine($"\n\tPart 2: {result.ToString()}");
 
