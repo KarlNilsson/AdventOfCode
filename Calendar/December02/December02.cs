@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using December02;
-using System.Text;
 using Intcode;
 
 public class December02Puzzle : Calendar.PuzzleClass
@@ -17,7 +15,6 @@ public class December02Puzzle : Calendar.PuzzleClass
         var inputArray = IntcodeMachine.GetInputArray(input);
         var replacements = new Dictionary<int, int> { { 1, 12 }, { 2, 2 } };
         inputArray = IntcodeMachine.ReplaceValues(inputArray, replacements);
-        var sb = new StringBuilder();
         var intcode = new IntcodeMachine(inputArray);
         var output = intcode.Alarm();
         sb.AppendLine($"\n\tPart 1: {output.ToString()}");

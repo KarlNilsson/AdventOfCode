@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Intcode;
 public class December05Puzzle : Calendar.PuzzleClass
 {
@@ -14,13 +13,14 @@ public class December05Puzzle : Calendar.PuzzleClass
         var input = Tools.GetFileContents("dec5");
         var inputArray = IntcodeMachine.GetInputArray(input);
         var shifter = new IntcodeMachine(inputArray);
-        var result = shifter.ThermalEnvironment(1);
-        var sb = new StringBuilder();
+        shifter.PushInput(1);
+        var result = shifter.ExecuteProgram();
         sb.AppendLine($"\n\tPart 1: {result.ToString()}");
 
         inputArray = IntcodeMachine.GetInputArray(input);
         shifter.LoadProgram(inputArray);
-        result = shifter.ThermalEnvironment(5);
+        shifter.PushInput(5);
+        result = shifter.ExecuteProgram();
         sb.AppendLine($"\n\tPart 2: {result.ToString()}");
 
         return sb.ToString();

@@ -28,8 +28,9 @@ namespace Intcode
 
         private enum OPReturnCodeEnum
         {
-            STOP = -1,
-            OK = 0
+            ERR = -1,
+            OK = 0,
+            STOP = 1
         }
 
         private struct Instruction
@@ -43,6 +44,8 @@ namespace Intcode
         private int[] _program;
         private int _pc;
         private Instruction _instruction;
+        private Stack<int> _inputStack;
+        private Stack<int> _outputStack;
         int _inputReg;
         int _outputReg;
         public IntcodeMachine(int[] Program = null)
@@ -52,6 +55,8 @@ namespace Intcode
             _instruction = new Instruction();
             _inputReg = 0;
             _outputReg = 0;
+            _inputStack = new Stack<int>();
+            _outputStack = new Stack<int>();
         }
 
         public static int[] GetInputArray(string Input)
@@ -66,11 +71,6 @@ namespace Intcode
             _pc = 0;
             _inputReg = 0;
             _outputReg = 0;
-        }
-
-        public int ExecuteProgram()
-        {
-            return -1;
         }
 
         private void Output(int OutputCode)
@@ -170,7 +170,43 @@ namespace Intcode
 
             }
 
+            if (returnCode == OPReturnCodeEnum.ERR)
+            {
+                var e = new Exception($"Unexpected return code for instruction <{_instruction.OPCode}>");
+                Console.Error.WriteLine(e.Message);
+                throw e;
+            }
+
             return returnCode;
+        }
+
+        public void PushInput(int input)
+        {
+            _inputStack.Push(input);
+        }
+
+        public int PeekInput(int input)
+        {
+            return _inputStack.Peek();
+        }
+
+        public int PopInput()
+        {
+            return _inputStack.Pop();
+        }
+        
+        public void PushOutput(int output)
+        {
+            _outputStack.Push(output);
+        }
+        public int PopOutput()
+        {
+            return _outputStack.Pop();
+        }
+
+        public int PeekOutput()
+        {
+            return _outputStack.Peek();
         }
 
         public int Alarm()
@@ -186,9 +222,8 @@ namespace Intcode
             return _program[0];
         }
 
-        public int ThermalEnvironment(int input)
+        public int ExecuteProgram()
         {
-            _inputReg = input;
             while (true)
             {
                 var returnValue = ExecuteNextInstruction();
@@ -227,6 +262,11 @@ namespace Intcode
         private OPReturnCodeEnum In()
         {
             var reg1 = _program[_pc + 1];
+            if (_inputStack.Count < 1)
+            {
+                return OPReturnCodeEnum.ERR;
+            }
+            _inputReg = _inputStack.Pop();
             _program[reg1] = _inputReg;
             _pc += 2;
             return OPReturnCodeEnum.OK;
@@ -237,7 +277,7 @@ namespace Intcode
             var reg1 = _program[_pc + 1];
             var value1 = _instruction.Param1 == OPModeEnum.IMM ? reg1 : _program[reg1];
             _outputReg = value1;
-            Console.WriteLine(_outputReg);
+            _outputStack.Push(_outputReg);
             _pc += 2;
             return OPReturnCodeEnum.OK;
         }

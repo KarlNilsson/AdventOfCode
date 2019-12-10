@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Calendar.December06;
 public class December06Puzzle : Calendar.PuzzleClass
 {
@@ -16,7 +15,6 @@ public class December06Puzzle : Calendar.PuzzleClass
         orbCalc.AddPlanets(input);
         var result = orbCalc.CalculateTotalWeight();
 
-        var sb = new StringBuilder();
         sb.AppendLine($"\n\tPart 1: {result.ToString()}");
 
 

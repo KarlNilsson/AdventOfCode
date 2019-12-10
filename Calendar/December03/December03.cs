@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Calendar.December03;
 
 public class December03Puzzle : Calendar.PuzzleClass
@@ -15,7 +14,6 @@ public class December03Puzzle : Calendar.PuzzleClass
         var wireList = WireParser.Parse(contents);
         var circBoard = new CircuitBoard(wireList);
         var result = circBoard.CalculateManhattanDistance();
-        var sb = new StringBuilder();
         sb.AppendLine($"\n\tPart 1: {result.ToString()}");
 
         result = circBoard.CalculateFewestSteps();
